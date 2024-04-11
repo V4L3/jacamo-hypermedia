@@ -29,11 +29,16 @@ targetAngle(256). // ~90 degrees angle
   .print(Value, "...").
 
 +!fetch_weather : true <-
-  .print("fetching the current weather conditions");
-  invokeAction("http://example.org/getWeatherData",[])[artifact_name("w2")];
-  .print("fetching successful");
-  .wait(5000);
-  !fetch_weather.
+  .print("Starting the Weather station... ");
+  invokeAction("http://example.org/start",[])[artifact_name("w2")];
+  .print("... success").
+
+// +!fetch_weather : true <-
+//   .print("fetching the current weather conditions");
+//   invokeAction("http://example.org/getWeatherData",[])[artifact_name("w2")];
+//   .print("fetching successful");
+//   .wait(5000);
+//   !fetch_weather.
 
 { include("inc/hypermedia.asl") }
 { include("$jacamoJar/templates/common-cartago.asl") }
