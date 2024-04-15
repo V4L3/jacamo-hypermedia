@@ -1,7 +1,8 @@
 /* Initial beliefs and rules */
 
 entry_url("http://localhost:8080/workspaces/10").
-building("01").
+relevant_workspace("103").
+relevant_artifact("w1"). // name of the relevant artifact this could also happen based on affordances of discovered artifacts
 heating("On").
 
 
@@ -9,7 +10,7 @@ heating("On").
 
 !start.
 
-+!start : entry_url(Url) & building(X) <-
++!start : entry_url(Url) & relevant_workspace(X) <-
   .print("hello world. I am the T-Agent situated in building ", X);
   makeArtifact("notification-server", "yggdrasil.NotificationServerArtifact", ["localhost", 8083], _);
   start;

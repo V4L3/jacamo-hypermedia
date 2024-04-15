@@ -91,6 +91,17 @@ val runTAgent by tasks.creating(JavaExec::class) {
     classpath = sourceSets["main"].runtimeClasspath
 }
 
+val runSAgent by tasks.creating(JavaExec::class) {
+    group = "JaCaMo"
+    description = "Runs the S Agent in building A"
+    doFirst {
+        mkdir("log")
+    }
+    mainClass.set("jacamo.infra.JaCaMoLauncher")
+    args("jacamo_hypermedia_SA.jcm")
+    classpath = sourceSets["main"].runtimeClasspath
+}
+
 val runSetupAgent by tasks.creating(JavaExec::class) {
     group = "JaCaMo"
     description = "Runs the Setup Agent (creates shared artifacts)"

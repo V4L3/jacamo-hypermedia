@@ -26,14 +26,17 @@
 
 /* Mirror hypermedia artifacts in local CArtAgO workspaces */
 
-+artifact(ArtifactIRI, ArtifactName)[workspace(_,WorkspaceName,_)] : true <-
-  .print("Discovered artifact ", ArtifactName ," in workspace ", WorkspaceName, ": ", ArtifactIRI);
++artifact(ArtifactIRI, ArtifactName)[workspace(_,WorkspaceName,_)] : relevant_artifact(ArtifactName) <-
+  .print("Discovered relevant artifact ", ArtifactName ," in workspace ", WorkspaceName, ": ", ArtifactIRI,". This artifact will be focused");
   makeArtifact(ArtifactName, "wot.ThingArtifact", [ArtifactIRI], ArtID);
   focus(ArtID);
   !registerForWebSub(ArtifactName, ArtID);
   .term2string(WorkspaceName, WorkspaceNameStr);
   ?workspace(WorkspaceIRI, WorkspaceNameStr);
   registerArtifactForFocus(WorkspaceIRI, ArtifactIRI, ArtID, ArtifactName).
+
++artifact(ArtifactIRI, ArtifactName)[workspace(_,WorkspaceName,_)] : true <-
+  .print("Discovered artifact ", ArtifactName ," in workspace ", WorkspaceName, ": ", ArtifactIRI,". This artifact will not be focused").
 
 +!registerForWebSub(ArtifactName, ArtID) : true <-
   ?websub(HubIRI, TopicIRI)[artifact_id(ArtID)];
