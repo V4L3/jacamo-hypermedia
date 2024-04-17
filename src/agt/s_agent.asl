@@ -1,16 +1,20 @@
 /* Initial beliefs and rules */
 
 entry_url("http://localhost:8080/workspaces/10").
-relevant_workspace("103").
+relevant_artifact("103").
 relevant_artifact("r1"). // name of the relevant artifact this could also happen based on affordances of discovered artifacts
 relevant_artifact("o1"). // name of the relevant artifact this could also happen based on affordances of discovered artifacts
+relevant_artifact("r2"). // name of the relevant artifact this could also happen based on affordances of discovered artifacts
+relevant_artifact("o2"). // name of the relevant artifact this could also happen based on affordances of discovered artifacts
+relevant_artifact("r3"). // name of the relevant artifact this could also happen based on affordances of discovered artifacts
+relevant_artifact("o3"). // name of the relevant artifact this could also happen based on affordances of discovered artifacts
 
 /* Initial goals */
 
 !start.
 
-+!start : entry_url(Url) & relevant_workspace(X) <-
-  .print("hello world. I am the T-Agent situated in building ", X);
++!start : entry_url(Url) <-
+  .print("hello world. I am the S-Agent");
   makeArtifact("notification-server", "yggdrasil.NotificationServerArtifact", ["localhost", 8083], _);
   start;
   !load_environment("10", Url);
@@ -28,15 +32,15 @@ relevant_artifact("o1"). // name of the relevant artifact this could also happen
 
 +isLocked("true")[artifact_name(_, ArtName)] : true <-
     -isLocked("false")[artifact_name(_, ArtName)];
-    .print("The Room ", ArtName, " is LOCKED: ");
+    .print("The room ", ArtName, " is LOCKED: ");
     -+fallDetectionIsActive("false");
-    .print("Fall detection is now INACTIVE").
+    .print("Fall detection for room ", ArtName ," is now INACTIVE").
 
 +isLocked("false")[artifact_name(_, ArtName)] : true <-
     -isLocked("true")[artifact_name(_, ArtName)];
     .print("The Room ", ArtName, " is UNLOCKED: ");
     -+fallDetectionIsActive("true");
-    .print("Fall detection is now ACTIVE").
+    .print("Fall detection for room ", ArtName ," is now ACTIVE").
 
 
 
@@ -44,5 +48,3 @@ relevant_artifact("o1"). // name of the relevant artifact this could also happen
 { include("$jacamoJar/templates/common-cartago.asl") }
 { include("$jacamoJar/templates/common-moise.asl") }
 
-// uncomment the include below to have an agent compliant with its organisation
-//{ include("$moiseJar/asl/org-obedient.asl") }
