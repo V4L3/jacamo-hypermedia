@@ -11,9 +11,9 @@
 
 /* Mirror hypermedia workspaces as local CArtAgO workspaces */
 
-@workspace_discovery[atomic]
-+workspace(WorkspaceIRI, WorkspaceName) : true <-
-  .print("Discovered workspace (name: ", WorkspaceName ,"): ", WorkspaceIRI);
+@relevant_workspace_discovery[atomic]
++workspace(WorkspaceIRI, WorkspaceName) : relevant_workspace(RelevantWorkspaceName) & WorkspaceName == RelevantWorkspaceName <-
+  .print("Discovered RELEVANT workspace (name: ", WorkspaceName ,"): ", WorkspaceIRI);
   createWorkspace(WorkspaceName);
   joinWorkspace(WorkspaceName, WorkspaceArtId);
   .term2string(WorkspaceNameTerm, WorkspaceName);
@@ -24,28 +24,26 @@
   focus(WkspArtId);
   !registerForWebSub(WorkspaceName, WkspArtId).
 
+@workspace_discovery[atomic]
++workspace(WorkspaceIRI, WorkspaceName) : true <-
+  .print("Discovered workspace (name: ", WorkspaceName ,"): ", WorkspaceIRI);
+  createWorkspace(WorkspaceName);
+  // Create a hypermedia WorkspaceArtifact for this workspace.
+  // Used for some operations (e.g., create artifact).
+  makeArtifact(WorkspaceName, "yggdrasil.ContainerArtifact", [WorkspaceIRI, "artifact"], WkspArtId)[wid(WorkspaceId)];
+  focus(WkspArtId);
+  !registerForWebSub(WorkspaceName, WkspArtId).
+
 /* Mirror hypermedia artifacts in local CArtAgO workspaces */
 
-// +artifact(ArtifactIRI, ArtifactName) : true <-
-//   .print("Discovered relevant artifact ", ArtifactName ," in workspace ", WorkspaceName, ": ", ArtifactIRI,". This artifact will be focused");
-//   makeArtifact(ArtifactName, "wot.ThingArtifact", [ArtifactIRI], ArtID);
-//   focus(ArtID);
-//   !registerForWebSub(ArtifactName, ArtID);
-//   .term2string(WorkspaceName, WorkspaceNameStr);
-//   ?workspace(WorkspaceIRI, WorkspaceNameStr);
-//   registerArtifactForFocus(WorkspaceIRI, ArtifactIRI, ArtID, ArtifactName).
-
-+artifact(ArtifactIRI, ArtifactName)[workspace(_,WorkspaceName,_)] : relevant_artifact(ArtifactName) <-
-  .print("Discovered relevant artifact ", ArtifactName ," in workspace ", WorkspaceName, ": ", ArtifactIRI,". This artifact will be focused");
++artifact(ArtifactIRI, ArtifactName)[workspace(_,WorkspaceName,_)] : relevant_artifact(RelevantArtifactName) & ArtifactName == RelevantArtifactName  <-
+  .print("Discovered artifact ", ArtifactName ," in workspace ", WorkspaceName, ": ", ArtifactIRI);
   makeArtifact(ArtifactName, "wot.ThingArtifact", [ArtifactIRI], ArtID);
   focus(ArtID);
   !registerForWebSub(ArtifactName, ArtID);
   .term2string(WorkspaceName, WorkspaceNameStr);
   ?workspace(WorkspaceIRI, WorkspaceNameStr);
   registerArtifactForFocus(WorkspaceIRI, ArtifactIRI, ArtID, ArtifactName).
-
-+artifact(ArtifactIRI, ArtifactName)[workspace(_,WorkspaceName,_)] : true <-
-  .print("Discovered artifact ", ArtifactName ," in workspace ", WorkspaceName, ": ", ArtifactIRI,". This artifact will not be focused").
 
 +!registerForWebSub(ArtifactName, ArtID) : true <-
   ?websub(HubIRI, TopicIRI)[artifact_id(ArtID)];
